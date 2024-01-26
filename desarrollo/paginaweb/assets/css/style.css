@@ -1,0 +1,23 @@
+.sectionlogos,h2{
+	background: black;
+	color: white;
+	display:block;
+	margin:auto;
+}
+
+
+h1,h2,h3,h4,p,footer{
+	text-align: center;
+}
+
+.productsTYA{
+	background: red;
+}
+
+
+.vidprod{
+	background: black;
+	color: white;
+	display:block;
+	margin:auto;
+}
