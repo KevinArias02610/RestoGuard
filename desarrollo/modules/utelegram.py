@@ -240,4 +240,5 @@ class Update():
         self.bot = b
 
     def reply(self, text, parse_mode='MarkdownV2', reply_markup=None):
+        chat_id = self.message['chat']['id']
         self.bot.send_message(self.message['chat']['id'], text, parse_mode=parse_mode, reply_markup=reply_markup)
