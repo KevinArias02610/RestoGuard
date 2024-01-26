@@ -17,18 +17,19 @@ rdr = MFRC522(spi=spi, gpioRst=4, gpioCs=5)
 sender_email = 'lasdeliciasdelcomelon@gmail.com'
 sender_name = 'Las delicias del comelon'
 sender_app_password = 'dwgb oetf hgqx jotm'
-recipient_email ='kjulianr41@gmail.com'
-email_subject = 'Compra RestoGuard Exitosa'
+recipient_email =''
+email_subject = 'Compra restaurante delicias del comelon exitosa'
 
 nueva_compra = {
     "Plato": "",
     "Precio": 0,
     "fecha": ""
 }
-
+ # token para la autenticacion del bot 
 TOKEN = '6387781123:AAHiEKiDD6FhsavX0ChVS5NQe6UrviyMcNo'
 bot = Bot(TOKEN)
-
+ 
+# funcion para conectar red  
 def conectaWifi(red, password):
     miRed = network.WLAN(network.STA_IF)
 
