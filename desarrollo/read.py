@@ -17,8 +17,9 @@ rdr = MFRC522(spi=spi, gpioRst=4, gpioCs=5)
 sender_email = 'lasdeliciasdelcomelon@gmail.com'
 sender_name = 'Las delicias del comelon'
 sender_app_password = 'dwgb oetf hgqx jotm'
-recipient_email =''
-email_subject = 'Compra restaurante delicias del comelon exitosa'
+recipient_email = ''
+recipient_email_admin = 'kjulianr41@gmail.com'
+email_subject = ''
 
 nueva_compra = {
     "Plato": "",
@@ -59,15 +60,21 @@ def obtenerFecha():
     )
     return formato_fecha_hora
 
-def enviarCorreo(datos_usuario):
-    nombres = datos_usuario.get("Nombres")
-    recipient_email = datos_usuario.get("Correo")
+def enviarCorreo(datos_usuario, destinatario):
     
+    nombres = datos_usuario.get("Nombres")
+    apellidos = datos_usuario.get("Apellidos")
+    cc = datos_usuario.get("CC")
     # Logica para armar tabla
     compras = datos_usuario.get("Compras", [])
+    tabla = ""
+    # Cabecera de la tabla condicionada
+    if destinatario:
+        tabla += f"Gracias {nombres} por tu visita! aqui esta tu cuenta\n\n"
+    else:
+        tabla += f"Cuenta actualizada para el cliente {nombres} {apellidos} con CC. {cc}\n\n"
     
-    # Cabecera de la tabla
-    tabla = "Platos pedidos\t\t\tPrecio\t\t\tFecha y hora\t\t\n"
+    tabla += "Platos pedidos\t\t\tPrecio\t\t\tFecha y hora\t\t\n"
     tabla += "-" * 83 + "\n"  # Línea horizontal"
     
     if compras:
@@ -92,14 +99,22 @@ def enviarCorreo(datos_usuario):
 
         # Agregar la fila con el total al final de la tabla
         tabla += "-" * 83 + "\n"
-        tabla += f"Total\t\t${total_precio:,.2f}\t\t\n"
-        tabla += f"Visita nuestra web https://lasdeliciaselcomelon.netlify.app/"
+        tabla += f"Total\t\t${total_precio:,.2f}\t\t\n\n"
+        
         # Imprimir la tabla
         print(tabla)
     else:
         tabla = "No hay compras registradas."
         print("No hay compras registradas.")
-    
+
+    if destinatario:
+        recipient_email = datos_usuario.get("Correo")
+        email_subject = f"Compra restaurante delicias del comelon exitosa"
+        tabla += f"Consulta nuestra web https://lasdeliciaselcomelon.netlify.app/"
+    else:
+        recipient_email = sender_email
+        email_subject = f"Actualizacion cuenta de {nombres} {apellidos}"
+        
     # Send email once after MCU boots up
     smtp = umail.SMTP('smtp.gmail.com', 465, ssl=True)
     smtp.login(sender_email, sender_app_password)
@@ -146,7 +161,7 @@ def responder_mensaje(token, chat_id, mensaje):
     base_url = f"https://api.telegram.org/bot{token}/sendMessage"
     mensaje = f"""\n {mensaje}.
                   \n Su cuenta llegara a su correo electronico.
-                  \n Si desea pedir otro plato ingrese el numero, de lo contrario escriba Salir.
+                  \n Si desea pedir otro plato ingrese el numero, de lo contrario omita este mensaje.
                   """
     params = {
         "chat_id": chat_id,
@@ -239,7 +254,8 @@ def proceso_enviar_compra(nueva_compra, datos_usuario):
     print("Compra agregada exitosamente.")
     
     # Envía el correo electrónico
-    enviarCorreo(datos_usuario)
+    enviarCorreo(datos_usuario, True)
+    enviarCorreo(datos_usuario, False)
     
     
 if conectaWifi("ETB2022", "Familia2022"):
