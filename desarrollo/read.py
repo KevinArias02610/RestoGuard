@@ -101,11 +101,8 @@ def enviarCorreo(datos_usuario, destinatario):
         tabla += "-" * 83 + "\n"
         tabla += f"Total\t\t${total_precio:,.2f}\t\t\n\n"
         
-        # Imprimir la tabla
-        print(tabla)
     else:
         tabla = "No hay compras registradas."
-        print("No hay compras registradas.")
 
     if destinatario:
         recipient_email = datos_usuario.get("Correo")
@@ -123,7 +120,9 @@ def enviarCorreo(datos_usuario, destinatario):
     smtp.write("Subject:" + email_subject + "\n")
     smtp.write(tabla)
     smtp.send()
-    smtp.quit()        
+    smtp.quit()
+    print(f"Correo electrónico enviado correctamente: \n {tabla}") 
+    
 # Función para enviar mensaje de menú al usuario
 def enviar_primer_mensaje(token, chat_id):
     base_url = f"https://api.telegram.org/bot{token}/sendMessage"
@@ -156,6 +155,7 @@ def enviar_primer_mensaje(token, chat_id):
         print("Mensaje enviado:", response.text)
     except Exception as e:
         print("Error al enviar mensaje:", e)
+
 # Función para enviar respuestas mediante el bot
 def responder_mensaje(token, chat_id, mensaje):
     base_url = f"https://api.telegram.org/bot{token}/sendMessage"
@@ -172,6 +172,7 @@ def responder_mensaje(token, chat_id, mensaje):
         print("Respuesta enviada:", response.text)
     except Exception as e:
         print("Error al Responder:", e)
+        
 # Función que contiene lógica del bot
 def chat_bot(chat_id, datos_usuario):
     @bot.add_message_handler("1")
@@ -280,7 +281,6 @@ if conectaWifi("ETB2022", "Familia2022"):
                 # Enviamos el primer mensaje a telegram                
                 enviar_primer_mensaje(TOKEN, chat_id)                   
                 chat_bot(chat_id, datos_usuario)                
-                print("Finaliza el loop")
 else:
        print ("Imposible conectar")
        miRed.active (False)
