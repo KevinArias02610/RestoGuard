@@ -49,7 +49,7 @@ def conectaWifi(red, password):
     print('Conexión exitosa')
     print('Datos de la red (IP/netmask/gw/DNS):', miRed.ifconfig())
     return True
-
+#función para obtener fecha actual
 def obtenerFecha():
     tiempo_actual = utime.time()
     fecha_hora_actual = utime.localtime(tiempo_actual)
@@ -59,7 +59,7 @@ def obtenerFecha():
         fecha_hora_actual[3], fecha_hora_actual[4], fecha_hora_actual[5]
     )
     return formato_fecha_hora
-
+# función para envío de correo
 def enviarCorreo(datos_usuario, destinatario):
     
     nombres = datos_usuario.get("Nombres")
@@ -124,7 +124,7 @@ def enviarCorreo(datos_usuario, destinatario):
     smtp.write(tabla)
     smtp.send()
     smtp.quit()        
-
+# Función para enviar mensaje de menú al usuario
 def enviar_primer_mensaje(token, chat_id):
     base_url = f"https://api.telegram.org/bot{token}/sendMessage"
     mensaje = """ *Bienvenido nuevamente a Las delicias del comelon*
@@ -156,7 +156,7 @@ def enviar_primer_mensaje(token, chat_id):
         print("Mensaje enviado:", response.text)
     except Exception as e:
         print("Error al enviar mensaje:", e)
-
+# Función para enviar respuestas mediante el bot
 def responder_mensaje(token, chat_id, mensaje):
     base_url = f"https://api.telegram.org/bot{token}/sendMessage"
     mensaje = f"""\n {mensaje}.
@@ -172,7 +172,7 @@ def responder_mensaje(token, chat_id, mensaje):
         print("Respuesta enviada:", response.text)
     except Exception as e:
         print("Error al Responder:", e)
-        
+# Función que contiene lógica del bot
 def chat_bot(chat_id, datos_usuario):
     @bot.add_message_handler("1")
     def help(update):
@@ -230,8 +230,7 @@ def chat_bot(chat_id, datos_usuario):
         
         
     bot.start_loop()          
-        
-    
+# Función para guardar en base de datos
 def proceso_enviar_compra(nueva_compra, datos_usuario):
     # Obtén la lista de compras actual
     compras = datos_usuario.get("Compras", [])
@@ -256,8 +255,7 @@ def proceso_enviar_compra(nueva_compra, datos_usuario):
     # Envía el correo electrónico
     enviarCorreo(datos_usuario, True)
     enviarCorreo(datos_usuario, False)
-    
-    
+# Función para validar conexión a red
 if conectaWifi("ETB2022", "Familia2022"):
     
     print("Acerque su tarjeta")    
